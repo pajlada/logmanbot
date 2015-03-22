@@ -1,0 +1,6 @@
+config.ini
+cron.ini
+__pycache__
+nohup.out
+log.txt
+logs/
