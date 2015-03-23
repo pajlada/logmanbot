@@ -74,6 +74,7 @@ class LogBot(irc.client.SimpleIRCClient):
             self.cdata[channel]['join_lastflush'] = time.time()
 
     def connect(self):
+        print('Connecting to the Twitch IRC server...')
         try:
             irc.client.SimpleIRCClient.connect(self, self.server, self.port, self.nickname, self.password, self.nickname)
         except irc.client.ServerConnectionError:
@@ -84,7 +85,10 @@ class LogBot(irc.client.SimpleIRCClient):
             self.connection.execute_delayed(self.reconnection_interval,
                                             self._connected_checker)
 
+            self.connect()
+
     def on_disconnect(self, chatconn, event):
+        print('Disconnected... {0}'.format('|'.join(event.arguments)))
         self.connection.execute_delayed(self.reconnection_interval,
                                         self._connected_checker)
 
@@ -96,6 +100,9 @@ class LogBot(irc.client.SimpleIRCClient):
 
     def on_pubmsg(self, chatconn, event):
         self.write_msg(event.target, '{0} <{1}> {2}'.format(self._time_str(), event.source.user, event.arguments[0]))
+
+        if event.source.user == 'pajlada' and event.arguments[0] == '!logping':
+            self.privmsg(event.target, 'pajlada, PONG')
 
     def on_join(self, chatconn, event):
         self.write_join(event.target, '{0} JOIN {1}'.format(self._time_str(), event.source.user))
