@@ -104,6 +104,13 @@ class LogBot(irc.client.SimpleIRCClient):
 
     def on_welcome(self, chatconn, event):
         self.info('on_welcome!')
+
+        for channel_name, channel in self.cdata.items():
+            self.info('Closing down {0} due to reconnect...'.format(channel_name))
+            channel['msg_fh'].close()
+            channel['join_fh'].close()
+            del self.cdata[channel]
+
         self.reload_channels()
 
     def reopen(self, channel):
