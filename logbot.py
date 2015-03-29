@@ -46,6 +46,11 @@ class LogBot(irc.client.SimpleIRCClient):
 
         self.connection.part(channel)
 
+        if channel in self.cdata:
+            self.cdata[channel]['msg_fh'].close()
+            self.cdata[channel]['join_fh'].close()
+            del self.cdata[channel]
+
     def __init__(self, config):
         irc.client.SimpleIRCClient.__init__(self)
 
@@ -181,12 +186,8 @@ class LogBot(irc.client.SimpleIRCClient):
         self.write_join(event.target, '{0} JOIN {1}'.format(self._time_str(), event.source.user))
 
     def on_part(self, chatconn, event):
-        self.write_join(event.target, '{0} PART {1}'.format(self._time_str(), event.source.user))
-
         if event.target in self.cdata:
-            self.cdata[event.target]['msg_fh'].close()
-            self.cdata[event.target]['join_fh'].close()
-            del self.cdata[event.target]
+            self.write_join(event.target, '{0} PART {1}'.format(self._time_str(), event.source.user))
 
     def quit(self):
         if self.connection.is_connected():
