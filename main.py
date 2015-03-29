@@ -20,8 +20,11 @@ if not 'main' in config:
     print('Missing section [main] in config.ini')
     sys.exit(0)
 
-def main():
+if not 'sql' in config:
+    print('Missing section [sql] in config.ini')
+    sys.exit(0)
 
+def main():
     bot = LogBot(config)
 
     bot.connect()
