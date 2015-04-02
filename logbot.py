@@ -13,7 +13,7 @@ import irc.logging
 class LogBot(irc.client.SimpleIRCClient):
     channel_queue = []
     channels_joined = 0
-    channel_limit = 40
+    channel_limit = 15
     channel_limit_wait = 20
 
     connected_channels = {}
