@@ -86,6 +86,7 @@ class LogBot(irc.client.SimpleIRCClient):
     # Step 3. Join all new channels
     def reload_channels(self):
         self.info('Reloading channels...')
+        self.sqlconn.ping()
         cursor = self.sqlconn.cursor()
 
         cursor.execute('SELECT `channel` FROM `channels` WHERE `enabled` = 1')
@@ -109,7 +110,7 @@ class LogBot(irc.client.SimpleIRCClient):
             self.info('Closing down {0} due to reconnect...'.format(channel_name))
             channel['msg_fh'].close()
             channel['join_fh'].close()
-            del self.cdata[channel]
+            del self.cdata[channel_name]
 
         self.reload_channels()
 
