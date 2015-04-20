@@ -110,7 +110,8 @@ class LogBot(irc.client.SimpleIRCClient):
             self.info('Closing down {0} due to reconnect...'.format(channel_name))
             channel['msg_fh'].close()
             channel['join_fh'].close()
-            del self.cdata[channel_name]
+
+        self.cdata.clear()
 
         self.reload_channels()
 
