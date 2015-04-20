@@ -13,7 +13,7 @@ import irc.logging
 class LogBot(irc.client.SimpleIRCClient):
     channel_queue = []
     channels_joined = 0
-    channel_limit = 15
+    channel_limit = 20
     channel_limit_wait = 20
 
     connected_channels = {}
@@ -191,11 +191,11 @@ class LogBot(irc.client.SimpleIRCClient):
                 self.reload_channels()
 
     def on_join(self, chatconn, event):
-        self.write_join(event.target, '{0} JOIN {1}'.format(self._time_str(), event.source.user))
+        self.write_join(event.target, '{0} JOIN <{1}>'.format(self._time_str(), event.source.user))
 
     def on_part(self, chatconn, event):
         if event.target in self.cdata:
-            self.write_join(event.target, '{0} PART {1}'.format(self._time_str(), event.source.user))
+            self.write_join(event.target, '{0} PART <{1}>'.format(self._time_str(), event.source.user))
 
     def quit(self):
         if self.connection.is_connected():
